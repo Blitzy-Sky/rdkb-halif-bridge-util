@@ -48,22 +48,19 @@
 *   caller unsolicited; see `Asynchronous Notification Model` and `Internal Error
 *   Handling`.
 *
-* The error vocabulary this interface defines today is exactly two values: 0 for
-* success and -1 for failure, with INTERFACE_EXIST and INTERFACE_NOT_EXIST as the
-* named aliases checkIfExists() reports them under. No error enumeration, no reason
-* code and no out-parameter status is declared, so an implementation cannot report why
-* a call failed and a caller cannot branch on a cause. Widening that would be a change
-* to the interface rather than to this documentation.
+* The error vocabulary this interface defines is exactly two values: 0 for success and
+* -1 for failure, with INTERFACE_EXIST and INTERFACE_NOT_EXIST as the named aliases
+* checkIfExists() reports them under. No error enumeration, no reason code and no
+* out-parameter status is declared, so an implementation cannot report why a call
+* failed and a caller cannot branch on a cause.
 *
-* Behaviour stated in this header is derived from these declarations and from the
-* repository specification. Where neither establishes a behaviour, the block says so
-* explicitly rather than presenting a plausible value; nothing here is presented as
-* observed runtime behaviour.
+* Where this interface does not establish a behaviour, that is stated explicitly on the
+* declaration concerned, so an absence of statement is a property of the interface and
+* not one a caller may fill in.
 *
 * @note This header does not include network_interface.h, and nothing declared here
-*       requires it. The two headers are independent inputs to the documentation
-*       generator; a caller that needs the gateway configuration record includes that
-*       header explicitly.
+*       requires it. A caller that needs the gateway configuration record declared
+*       there includes that header explicitly.
 */
 
 #ifndef  _BRIDGE_UTIL_OEM_H
@@ -104,16 +101,16 @@
  * @{
  */
 
-#define BRIDGE_UTIL_LOG_FNAME "/rdklogs/logs/bridgeUtils.log" 				/**< Absolute path of the log file this interface writes diagnostic output to. It is the path the bridge_util_log() macro's stream is expected to be opened on; the repository specification records under `Logging and debugging requirements` that an implementation using this constant writes here rather than to the /var/tmp/ alternative that applies where a platform mounts its log partition elsewhere. This is diagnostic output, not persisted interface state; see `Persistence Model`. */
-#define GRE_HANDLER_SCRIPT "/etc/utopia/service.d/service_multinet/handle_gre.sh"	/**< Absolute path of the platform-provided GRE handler script this interface names. It is an external executable supplied by the platform, not something this interface declares, invokes on the caller's behalf or persists; no declared function takes it as an argument. */
-#define TOTAL_IFLIST_SIZE      1024		                                        /**< Size in bytes of a complete interface list, meaning all technologies together. It bounds a caller's own aggregate list buffer; it is not the size of any field of bridgeDetails, whose per-technology lists are each IFLIST_SIZE bytes. No declared function takes a buffer of this size. */
-#define BRIDGE_NAME_SIZE       64			                                /**< Size in bytes of the bridgeDetails::bridgeName, bridgeDetails::vlan_name and bridgeDetails::VirtualParentIfname arrays. It is the array size and the whole of what this interface fixes about those fields, and no field carries a companion length. A caller that stores a name and a terminator inside one therefore has at most 63 characters of name available. */
-#define IFACE_NAME_SIZE        64			                                /**< Size in bytes an individual interface name is bounded by. No field of bridgeDetails and no parameter of a declared function is declared with it, so it bounds a caller's own single-name buffer rather than anything this interface allocates. */
-#define IFLIST_SIZE	       256			                                /**< Size in bytes of each per-technology list array of bridgeDetails - ethIfList, MoCAIfList, GreIfList and WiFiIfList. It is the array size, and each array holds a space-separated list of interface names, so it bounds the whole list rather than one name. No field carries a companion length, so a caller that stores a list and a terminator inside one has at most 255 characters of list available. */
-#define MAX_LOG_BUFF_SIZE      1024		                                        /**< Size in bytes of the log_buff scratch buffer. The macro passes MAX_LOG_BUFF_SIZE-1 as the snprintf() size argument, which counts the terminator, so it writes at most MAX_LOG_BUFF_SIZE-2 characters plus the terminator and never uses the buffer's final byte. A longer message is truncated rather than overflowing. */
-#define TIMESTAMP	       64			                                /**< Number of bytes reserved for the timestamp prefix a logged message carries, which is why log_msg_wtime is declared MAX_LOG_BUFF_SIZE+TIMESTAMP bytes long. It is a buffer allowance in bytes, not a time value. */
-#define  INTERFACE_EXIST       0		                                        /**< The value checkIfExists() returns when the named interface is present. It is the same value as the success code every status-returning function in this interface uses, so a caller cannot distinguish "the query succeeded" from "the interface exists" - they are the same answer. */
-#define  INTERFACE_NOT_EXIST  -1		                                        /**< The value checkIfExists() returns when the named interface is absent. It is the same value as the failure code every status-returning function in this interface uses. Absence is a legitimate answer to the question asked, so a caller must not treat this as a failed call; see `Internal Error Handling` in the repository specification. */
+#define BRIDGE_UTIL_LOG_FNAME "/rdklogs/logs/bridgeUtils.log" 				/*!< Absolute path of the log file this interface writes diagnostic output to. It is the path the bridge_util_log() macro's stream is expected to be opened on; the repository specification records under `Logging and debugging requirements` that an implementation using this constant writes here rather than to the /var/tmp/ alternative that applies where a platform mounts its log partition elsewhere. This is diagnostic output, not persisted interface state; see `Persistence Model`. */
+#define GRE_HANDLER_SCRIPT "/etc/utopia/service.d/service_multinet/handle_gre.sh"	/*!< Absolute path of the platform-provided GRE handler script this interface names. It is an external executable supplied by the platform, not something this interface declares, invokes on the caller's behalf or persists; no declared function takes it as an argument. */
+#define TOTAL_IFLIST_SIZE      1024		                                        /*!< Size in bytes of a complete interface list, meaning all technologies together. It bounds a caller's own aggregate list buffer; it is not the size of any field of bridgeDetails, whose per-technology lists are each IFLIST_SIZE bytes. No declared function takes a buffer of this size. */
+#define BRIDGE_NAME_SIZE       64			                                /*!< Size in bytes of the bridgeDetails::bridgeName, bridgeDetails::vlan_name and bridgeDetails::VirtualParentIfname arrays. It is the array size and the whole of what this interface fixes about those fields, and no field carries a companion length. A caller that stores a name and a terminator inside one therefore has at most 63 characters of name available. */
+#define IFACE_NAME_SIZE        64			                                /*!< Size in bytes an individual interface name is bounded by. No field of bridgeDetails and no parameter of a declared function is declared with it, so it bounds a caller's own single-name buffer rather than anything this interface allocates. */
+#define IFLIST_SIZE	       256			                                /*!< Size in bytes of each per-technology list array of bridgeDetails - ethIfList, MoCAIfList, GreIfList and WiFiIfList. It is the array size, and each array holds a space-separated list of interface names, so it bounds the whole list rather than one name. No field carries a companion length, so a caller that stores a list and a terminator inside one has at most 255 characters of list available. */
+#define MAX_LOG_BUFF_SIZE      1024		                                        /*!< Size in bytes of the log_buff scratch buffer. The macro passes MAX_LOG_BUFF_SIZE-1 as the snprintf() size argument, which counts the terminator, so it writes at most MAX_LOG_BUFF_SIZE-2 characters plus the terminator and never uses the buffer's final byte. A longer message is truncated rather than overflowing. */
+#define TIMESTAMP	       64			                                /*!< Number of bytes reserved for the timestamp prefix a logged message carries, which is why log_msg_wtime is declared MAX_LOG_BUFF_SIZE+TIMESTAMP bytes long. It is a buffer allowance in bytes, not a time value. */
+#define  INTERFACE_EXIST       0		                                        /*!< The value checkIfExists() returns when the named interface is present. It is the same value as the success code every status-returning function in this interface uses, so a caller cannot distinguish "the query succeeded" from "the interface exists" - they are the same answer. */
+#define  INTERFACE_NOT_EXIST  -1		                                        /*!< The value checkIfExists() returns when the named interface is absent. It is the same value as the failure code every status-returning function in this interface uses. Absence is a legitimate answer to the question asked, so a caller must not treat this as a failed call; see `Internal Error Handling` in the repository specification. */
 
 /*
  * Externally defined state this interface depends on.
@@ -137,21 +134,21 @@
  * repository specification (docs/pages/halSpec.md).
  */
 
-extern int DeviceMode;                                          /**< The device role the caller's platform is operating in: 0 is router operation and 2 is bridge operation. This interface declares the symbol and documents those two values, but does not state how an implementation's behaviour changes with it, so a caller must not infer a per-mode contract from this interface alone. */
-extern int MocaIsolation_Val; 				        /**< The platform's MoCA isolation setting, which is platform-specific policy the caller supplies. This interface neither enumerates its values nor states which declared function consults it. */
-extern int need_wifi_gw_refresh;				/**< Flag indicating that a Wi-Fi gateway refresh is needed. This interface declares the flag but specifies neither the values it takes nor which function sets, clears or acts on it. */
-extern int need_switch_gw_refresh;				/**< Flag indicating that a switch gateway refresh is needed. As with need_wifi_gw_refresh, the values and the party that sets them are unspecified by this interface. */
-extern int syncMembers;						/**< Marker used to coordinate bridge member updates during a sync. It is one of the two symbols that exist to mark work in progress, so concurrent bridge operations driven without external serialisation will interleave in it; this interface specifies no locking for that. */
-extern int BridgeOprInPropgress;				/**< Marker that a bridge operation is in progress. The spelling is the interface's own and is preserved. This interface declares the marker but specifies neither the values it takes nor which function sets or clears it, so a caller cannot use it as a reliable interlock on the strength of this interface alone. */
-extern FILE *logFp;						/**< The stream bridge_util_log() writes through. The caller's program opens it, owns it and closes it; nothing in this interface opens or closes it. It has the one ordering requirement among these symbols: while it is NULL the macro's file write is skipped, so it must be open before any call whose output must reach BRIDGE_UTIL_LOG_FNAME. */
-extern char log_buff[MAX_LOG_BUFF_SIZE];			/**< Scratch buffer, MAX_LOG_BUFF_SIZE bytes, that bridge_util_log() formats the caller's message into. It is overwritten on every logged message, so its contents are meaningful only immediately after a log call and must not be treated as a record of anything. */
-extern char log_msg_wtime[MAX_LOG_BUFF_SIZE+TIMESTAMP];		/**< Scratch buffer, MAX_LOG_BUFF_SIZE+TIMESTAMP bytes, that bridge_util_log() assembles the timestamped message into before writing it. Overwritten on every logged message, exactly as log_buff is. */
-extern char primaryBridgeName[64];				/**< The name of the platform's primary bridge, supplied by the caller. The array is 64 bytes, the same width as bridgeDetails::bridgeName. No companion length symbol is declared for it, so a caller storing a name here keeps it inside the array and terminates it there; this interface states no other representation for the contents and names no declared function that reads them. */
-extern int PORT2ENABLE;						/**< Platform-specific port enable state. This interface neither enumerates its values nor states which declared function consults it. */
-extern int ethWanEnabled;				        /**< Whether an Ethernet WAN is enabled on the platform. This interface does not enumerate the values used for enabled and disabled. */
-extern char ethWanIfaceName[64];				/**< The Ethernet WAN interface name, supplied by the caller. The array is 64 bytes. No companion length symbol is declared for it, so a caller storing a name here keeps it inside the array and terminates it there; this interface states no other representation for the contents and names no declared function that reads them. */
-extern struct tm *timeinfo;					/**< Broken-down UTC time that bridge_util_log() uses to build a message's timestamp. The macro assigns it from gmtime(), which returns a pointer to storage owned by the C library, so the caller must not free it and must not rely on its contents across another gmtime() or localtime() call. */
-extern time_t utc_time;						/**< The UTC time value bridge_util_log() reads from time() and converts through timeinfo when building a message's timestamp. */
+extern int DeviceMode;                                          /*!< The device role the caller's platform is operating in: 0 is router operation and 2 is bridge operation. This interface declares the symbol and documents those two values, but does not state how an implementation's behaviour changes with it, so a caller must not infer a per-mode contract from this interface alone. */
+extern int MocaIsolation_Val; 				        /*!< The platform's MoCA isolation setting, which is platform-specific policy the caller supplies. This interface neither enumerates its values nor states which declared function consults it. */
+extern int need_wifi_gw_refresh;				/*!< Flag indicating that a Wi-Fi gateway refresh is needed. This interface declares the flag but specifies neither the values it takes nor which function sets, clears or acts on it. */
+extern int need_switch_gw_refresh;				/*!< Flag indicating that a switch gateway refresh is needed. As with need_wifi_gw_refresh, the values and the party that sets them are unspecified by this interface. */
+extern int syncMembers;						/*!< Marker used to coordinate bridge member updates during a sync. It is one of the two symbols that exist to mark work in progress, so concurrent bridge operations driven without external serialisation will interleave in it; this interface specifies no locking for that. */
+extern int BridgeOprInPropgress;				/*!< Marker that a bridge operation is in progress. The declared name spells `Progress` as `Propgress`, and that is the spelling a caller must use. This interface declares the marker but specifies neither the values it takes nor which function sets or clears it, so a caller cannot use it as a reliable interlock on the strength of this interface alone. */
+extern FILE *logFp;						/*!< The stream bridge_util_log() writes through. The caller's program opens it, owns it and closes it; nothing in this interface opens or closes it. It has the one ordering requirement among these symbols: while it is NULL the macro's file write is skipped, so it must be open before any call whose output must reach BRIDGE_UTIL_LOG_FNAME. */
+extern char log_buff[MAX_LOG_BUFF_SIZE];			/*!< Scratch buffer, MAX_LOG_BUFF_SIZE bytes, that bridge_util_log() formats the caller's message into. It is overwritten on every logged message, so its contents are meaningful only immediately after a log call and must not be treated as a record of anything. */
+extern char log_msg_wtime[MAX_LOG_BUFF_SIZE+TIMESTAMP];		/*!< Scratch buffer, MAX_LOG_BUFF_SIZE+TIMESTAMP bytes, that bridge_util_log() assembles the timestamped message into before writing it. Overwritten on every logged message, exactly as log_buff is. */
+extern char primaryBridgeName[64];				/*!< The name of the platform's primary bridge, supplied by the caller. The array is 64 bytes, the same width as bridgeDetails::bridgeName. No companion length symbol is declared for it, so a caller storing a name here keeps it inside the array and terminates it there; this interface states no other representation for the contents and names no declared function that reads them. */
+extern int PORT2ENABLE;						/*!< Platform-specific port enable state. This interface neither enumerates its values nor states which declared function consults it. */
+extern int ethWanEnabled;				        /*!< Whether an Ethernet WAN is enabled on the platform. This interface does not enumerate the values used for enabled and disabled. */
+extern char ethWanIfaceName[64];				/*!< The Ethernet WAN interface name, supplied by the caller. The array is 64 bytes. No companion length symbol is declared for it, so a caller storing a name here keeps it inside the array and terminates it there; this interface states no other representation for the contents and names no declared function that reads them. */
+extern struct tm *timeinfo;					/*!< Broken-down UTC time that bridge_util_log() uses to build a message's timestamp. The macro assigns it from gmtime(), which returns a pointer to storage owned by the C library, so the caller must not free it and must not rely on its contents across another gmtime() or localtime() call. */
+extern time_t utc_time;						/*!< The UTC time value bridge_util_log() reads from time() and converts through timeinfo when building a message's timestamp. */
 
 /**
  * @brief Formats a message and writes it, timestamped, to the interface's log stream.
@@ -168,8 +165,6 @@ extern time_t utc_time;						/**< The UTC time value bridge_util_log() reads fro
  * The macro takes one named variadic parameter, `fmt ...`, which captures the format
  * string together with the arguments it consumes and is expanded into snprintf(). A
  * message longer than the bound above is truncated rather than overflowing the buffer.
- * The parameter is described here in prose rather than with a @c \@param tag, because
- * the tag cannot name a variadic macro parameter without the generator rejecting it.
  *
  * @pre logFp must be open for the message to be emitted at all. While it is NULL the
  *      message is formatted into log_buff and discarded.
@@ -179,18 +174,16 @@ extern time_t utc_time;						/**< The UTC time value bridge_util_log() reads fro
  *
  * @warning There is no fallback to standard output. The only output statements in this
  *          definition are inside the logFp != NULL branch, so when that stream is not
- *          open the message is silently dropped. Earlier documentation of this macro
- *          stated that the message is printed to standard output instead; the
- *          definition below does not do that, and a caller must not rely on it.
+ *          open the message is formatted and then silently dropped. A caller must not
+ *          rely on seeing it on standard output or anywhere else.
  *
  * @note The macro writes the shared globals log_buff, log_msg_wtime, utc_time and
  *       timeinfo with no locking, so two threads logging concurrently will interleave
  *       in them. This is the same obligation `Threading Model` places on the caller
  *       for the interface as a whole: serialise, or do not share.
- * @note This logging mechanism is intended to be made generic in a future revision of
- *       the interface, which the repository specification records under `Logging and
- *       debugging requirements`. A caller should therefore depend on the stream and
- *       the emitted form above, and not on the buffers or the internal structure.
+ * @note The stream and the emitted form above are what this interface fixes. The
+ *       buffers and the macro's internal structure are not part of that contract, so
+ *       a caller depends on the stream and the format and not on them.
  *
  * @see BRIDGE_UTIL_LOG_FNAME
  * @see MAX_LOG_BUFF_SIZE
@@ -244,28 +237,28 @@ extern time_t utc_time;						/**< The UTC time value bridge_util_log() reads fro
  * @see HandlePostConfigVendor
  */
 enum Config {
-	PRIVATE_LAN = 1,					/**< The private LAN bridge, which carries the subscriber's own LAN traffic. */
-	HOME_SECURITY = 2,					/**< The home security bridge, carrying traffic for home-monitoring devices kept off the private LAN. */
-	HOTSPOT_2G = 3,						/**< The open 2.4 GHz community hotspot bridge. */
-	HOTSPOT_5G = 4,						/**< The open 5 GHz community hotspot bridge. */
-	LOST_N_FOUND = 6,					/**< The lost-and-found bridge, used for a device that has not completed onboarding. Note that 5 is not assigned, so this member does not follow HOTSPOT_5G numerically. */
-	HOTSPOT_SECURE_2G = 7,				        /**< The secured 2.4 GHz community hotspot bridge. */
-	HOTSPOT_SECURE_5G = 8,				        /**< The secured 5 GHz community hotspot bridge. */
-	MOCA_ISOLATION = 9,					/**< The MoCA isolation bridge, which separates MoCA-attached devices from the private LAN. Related caller-supplied policy is carried in MocaIsolation_Val. */
-	MESH_BACKHAUL = 10,					/**< The mesh backhaul bridge, carrying traffic between mesh nodes. */
-	ETH_BACKHAUL = 11,					/**< The Ethernet backhaul bridge, carrying mesh backhaul traffic over a wired link. */
-	MESH = 12,						/**< The mesh bridge itself, as distinct from the backhaul bridges that connect its nodes. */
-    MESH_WIFI_BACKHAUL_2G = 13,     /**< The 2.4 GHz Wi-Fi mesh backhaul bridge. */
-    MESH_WIFI_BACKHAUL_5G = 14,     /**< The 5 GHz Wi-Fi mesh backhaul bridge. */
-    MESH_ONBOARD = 18,              /**< The mesh onboarding bridge, used while a node joins the mesh. Note that 15, 16 and 17 are not assigned unconditionally: 17 belongs to MANAGE_WIFI_BRIDGE below and exists only under WIFI_MANAGE_SUPPORTED. */
-    MESH_WIFI_ONBOARD_2G = 19       /**< The 2.4 GHz Wi-Fi mesh onboarding bridge. */
+	PRIVATE_LAN = 1,					/*!< The private LAN bridge, which carries the subscriber's own LAN traffic. */
+	HOME_SECURITY = 2,					/*!< The home security bridge, carrying traffic for home-monitoring devices kept off the private LAN. */
+	HOTSPOT_2G = 3,						/*!< The open 2.4 GHz community hotspot bridge. */
+	HOTSPOT_5G = 4,						/*!< The open 5 GHz community hotspot bridge. */
+	LOST_N_FOUND = 6,					/*!< The lost-and-found bridge, used for a device that has not completed onboarding. Note that 5 is not assigned, so this member does not follow HOTSPOT_5G numerically. */
+	HOTSPOT_SECURE_2G = 7,				        /*!< The secured 2.4 GHz community hotspot bridge. */
+	HOTSPOT_SECURE_5G = 8,				        /*!< The secured 5 GHz community hotspot bridge. */
+	MOCA_ISOLATION = 9,					/*!< The MoCA isolation bridge, which separates MoCA-attached devices from the private LAN. Related caller-supplied policy is carried in MocaIsolation_Val. */
+	MESH_BACKHAUL = 10,					/*!< The mesh backhaul bridge, carrying traffic between mesh nodes. */
+	ETH_BACKHAUL = 11,					/*!< The Ethernet backhaul bridge, carrying mesh backhaul traffic over a wired link. */
+	MESH = 12,						/*!< The mesh bridge itself, as distinct from the backhaul bridges that connect its nodes. */
+    MESH_WIFI_BACKHAUL_2G = 13,     /*!< The 2.4 GHz Wi-Fi mesh backhaul bridge. */
+    MESH_WIFI_BACKHAUL_5G = 14,     /*!< The 5 GHz Wi-Fi mesh backhaul bridge. */
+    MESH_ONBOARD = 18,              /*!< The mesh onboarding bridge, used while a node joins the mesh. Note that 15, 16 and 17 are not assigned unconditionally: 17 belongs to MANAGE_WIFI_BRIDGE below and exists only under WIFI_MANAGE_SUPPORTED. */
+    MESH_WIFI_ONBOARD_2G = 19       /*!< The 2.4 GHz Wi-Fi mesh onboarding bridge. */
 #if defined  (WIFI_MANAGE_SUPPORTED)
-        ,MANAGE_WIFI_BRIDGE = 17		                /**< The managed Wi-Fi bridge. Declared only when WIFI_MANAGE_SUPPORTED is defined; a build without that flag does not declare it, so its value 17 must not be passed as an instance number there. */
+        ,MANAGE_WIFI_BRIDGE = 17		                /*!< The managed Wi-Fi bridge. Declared only when WIFI_MANAGE_SUPPORTED is defined; a build without that flag does not declare it, so its value 17 must not be passed as an instance number there. */
 #endif /* WIFI_MANAGE_SUPPORTED*/
 #if defined (AMENITIES_NETWORK_ENABLED) && !defined (_CBR2_PRODUCT_REQ_)
-    ,AMENITY_BRIDGE_2G = 20,        /**< The 2.4 GHz amenity-network bridge. Declared only when AMENITIES_NETWORK_ENABLED is defined and _CBR2_PRODUCT_REQ_ is not; both conditions must hold. */
-    AMENITY_BRIDGE_5G = 21,         /**< The 5 GHz amenity-network bridge, under the same pair of conditions as AMENITY_BRIDGE_2G. */
-    AMENITY_BRIDGE_6G = 22          /**< The 6 GHz amenity-network bridge, under the same pair of conditions as AMENITY_BRIDGE_2G. */
+    ,AMENITY_BRIDGE_2G = 20,        /*!< The 2.4 GHz amenity-network bridge. Declared only when AMENITIES_NETWORK_ENABLED is defined and _CBR2_PRODUCT_REQ_ is not; both conditions must hold. */
+    AMENITY_BRIDGE_5G = 21,         /*!< The 5 GHz amenity-network bridge, under the same pair of conditions as AMENITY_BRIDGE_2G. */
+    AMENITY_BRIDGE_6G = 22          /*!< The 6 GHz amenity-network bridge, under the same pair of conditions as AMENITY_BRIDGE_2G. */
 #endif /*AMENITIES_NETWORK_ENABLED*/
 };
 
@@ -291,13 +284,13 @@ enum Config {
  * @see updateBridgeInfo
  */
 enum INTERFACE_TYPE {
-    IF_BRIDGE_BRIDGEUTIL = 1, 	        /**< A bridge interface, meaning the operation concerns the bridge itself rather than a member port. */
-    IF_VLAN_BRIDGEUTIL = 2,		/**< A VLAN interface, identified in the bridge record by bridgeDetails::vlan_name and bridgeDetails::vlanID. */
-    IF_GRE_BRIDGEUTIL = 3,		/**< A GRE (Generic Routing Encapsulation) tunnel interface, drawn from bridgeDetails::GreIfList. */
-    IF_MOCA_BRIDGEUTIL = 4,		/**< A MoCA (Multimedia over Coax Alliance) interface, drawn from bridgeDetails::MoCAIfList. */
-    IF_WIFI_BRIDGEUTIL = 5,		/**< A Wi-Fi interface, drawn from bridgeDetails::WiFiIfList. */
-    IF_ETH_BRIDGEUTIL = 6,		/**< An Ethernet interface, drawn from bridgeDetails::ethIfList. */
-    IF_OTHER_BRIDGEUTIL			/**< Any other or unspecified interface type. It carries no explicit initialiser, so it takes the value after IF_ETH_BRIDGEUTIL, which is 7. This is also the value an updateBridgeInfo() sync-delete passes for type, in place of the interface's own type. */
+    IF_BRIDGE_BRIDGEUTIL = 1, 	        /*!< A bridge interface, meaning the operation concerns the bridge itself rather than a member port. */
+    IF_VLAN_BRIDGEUTIL = 2,		/*!< A VLAN interface, identified in the bridge record by bridgeDetails::vlan_name and bridgeDetails::vlanID. */
+    IF_GRE_BRIDGEUTIL = 3,		/*!< A GRE (Generic Routing Encapsulation) tunnel interface, drawn from bridgeDetails::GreIfList. */
+    IF_MOCA_BRIDGEUTIL = 4,		/*!< A MoCA (Multimedia over Coax Alliance) interface, drawn from bridgeDetails::MoCAIfList. */
+    IF_WIFI_BRIDGEUTIL = 5,		/*!< A Wi-Fi interface, drawn from bridgeDetails::WiFiIfList. */
+    IF_ETH_BRIDGEUTIL = 6,		/*!< An Ethernet interface, drawn from bridgeDetails::ethIfList. */
+    IF_OTHER_BRIDGEUTIL			/*!< Any other or unspecified interface type. It carries no explicit initialiser, so it takes the value after IF_ETH_BRIDGEUTIL, which is 7. This is also the value an updateBridgeInfo() sync-delete passes for type, in place of the interface's own type. */
 };
 
 /**
@@ -306,11 +299,11 @@ enum INTERFACE_TYPE {
  * @brief The operation an updateBridgeInfo() call performs on the bridge.
  *
  * A member of this enumeration is the range of the Opr argument of updateBridgeInfo(),
- * which is declared int, so the enumerator is cast to int at the call site. This is
- * the enumeration that argument's range actually comes from: the parameter
- * documentation on updateBridgeInfo() has historically named an operation enumeration
- * this interface does not declare, which the repository specification records as a
- * residue of the removed Open vSwitch dependency under `Variability Management`.
+ * which is declared int, so the enumerator is cast to int at the call site. It is the
+ * only bridge-operation enumeration this interface declares. `enum OVS_CMD` is not
+ * defined by either header, so a caller holding values from that enumeration maps each
+ * one explicitly onto a `BridgeOpr` member rather than assuming the two agree on their
+ * members or their numeric values.
  *
  * @note These two members are inputs the caller selects, not states the interface
  *       reports, so no transition between them is specified or implied.
@@ -318,8 +311,8 @@ enum INTERFACE_TYPE {
  * @see updateBridgeInfo
  */
 enum BridgeOpr {
-	DELETE_BRIDGE = 0, 	/**< Delete the bridge the record identifies, or remove the named interface from it in the sync-delete case. */
-	CREATE_BRIDGE = 1	/**< Create the bridge the record identifies, or update it where it already exists - updateBridgeInfo() covers creation and update through this one operation. */
+	DELETE_BRIDGE = 0, 	/*!< Delete the bridge the record identifies, or remove the named interface from it in the sync-delete case. */
+	CREATE_BRIDGE = 1	/*!< Create the bridge the record identifies, or update it where it already exists - updateBridgeInfo() covers creation and update through this one operation. */
 };
 
 
@@ -364,7 +357,7 @@ enum BridgeOpr {
  *       reported to the caller.
  * @note This interface does not state which fields a given call reads. What each of
  *       the three functions taking the record requires of it is documented on that
- *       function, and where the interface does not establish it, the block says so.
+ *       function.
  * @note The example values below are those this interface documents. They are examples
  *       of platform naming and not a fixed set; actual names are vendor-specific and
  *       may be discovered with getVendorIfaces().
@@ -375,14 +368,14 @@ enum BridgeOpr {
  */
 
 typedef struct bridgeDetails {
-	char bridgeName[BRIDGE_NAME_SIZE];				/**< Name of the bridge this record describes, in a fixed BRIDGE_NAME_SIZE (64) byte array. Example values are brlan0, brlan1, privbr and br-home. This is the field that identifies which bridge an operation applies to. */
-	char vlan_name[BRIDGE_NAME_SIZE];				/**< Name of the VLAN interface associated with the bridge, in a fixed BRIDGE_NAME_SIZE (64) byte array. Example values are vlan1, vlan10 and guest_vlan. Meaningful for a VLAN operation; this interface does not state what an implementation does with it for other interface types. */
-    	char VirtualParentIfname[BRIDGE_NAME_SIZE];	                /**< Name of the parent interface a virtual interface is created over, in a fixed BRIDGE_NAME_SIZE (64) byte array. Example values are eth0, eth1 and wan0. */
-	int  vlanID;							/**< VLAN identifier for the VLAN named in vlan_name. Example values are 1, 2, 3, 10 and 100. This interface states no valid range for the field, so a caller must not assume that the 802.1Q range is validated by an implementation; see `Data Structures and Defines` in the repository specification. */
-	char ethIfList[IFLIST_SIZE];					/**< Space-separated list of Ethernet interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are eth0, eth1 and eth2. The bound applies to the whole list, not to one name. */
-	char MoCAIfList[IFLIST_SIZE];					/**< Space-separated list of MoCA interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are moca0 and moca1. */
-	char GreIfList[IFLIST_SIZE];					/**< Space-separated list of GRE interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are gre0 and gre1. */
-	char WiFiIfList[IFLIST_SIZE];					/**< Space-separated list of Wi-Fi interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are wlan0 and wlan1. */
+	char bridgeName[BRIDGE_NAME_SIZE];				/*!< Name of the bridge this record describes, in a fixed BRIDGE_NAME_SIZE (64) byte array. Example values are brlan0, brlan1, privbr and br-home. This is the field that identifies which bridge an operation applies to. */
+	char vlan_name[BRIDGE_NAME_SIZE];				/*!< Name of the VLAN interface associated with the bridge, in a fixed BRIDGE_NAME_SIZE (64) byte array. Example values are vlan1, vlan10 and guest_vlan. Meaningful for a VLAN operation; this interface does not state what an implementation does with it for other interface types. */
+    	char VirtualParentIfname[BRIDGE_NAME_SIZE];	                /*!< Name of the parent interface a virtual interface is created over, in a fixed BRIDGE_NAME_SIZE (64) byte array. Example values are eth0, eth1 and wan0. */
+	int  vlanID;							/*!< VLAN identifier for the VLAN named in vlan_name. Example values are 1, 2, 3, 10 and 100. This interface states no valid range for the field, so a caller must not assume that the 802.1Q range is validated by an implementation; see `Data Structures and Defines` in the repository specification. */
+	char ethIfList[IFLIST_SIZE];					/*!< Space-separated list of Ethernet interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are eth0, eth1 and eth2. The bound applies to the whole list, not to one name. */
+	char MoCAIfList[IFLIST_SIZE];					/*!< Space-separated list of MoCA interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are moca0 and moca1. */
+	char GreIfList[IFLIST_SIZE];					/*!< Space-separated list of GRE interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are gre0 and gre1. */
+	char WiFiIfList[IFLIST_SIZE];					/*!< Space-separated list of Wi-Fi interface names to associate with the bridge, in a fixed IFLIST_SIZE (256) byte array. Example values are wlan0 and wlan1. */
 }bridgeDetails;
 
 
@@ -457,13 +450,12 @@ typedef struct bridgeDetails {
 * @param[in] Opr  - Specifies the operation to be performed on a network interface or
 *                   bridge. The range of acceptable values is `enum BridgeOpr` -
 *                   DELETE_BRIDGE (0) or CREATE_BRIDGE (1) - and the enumerator is cast
-*                   to `int` to use this param. Note that the historical documentation
-*                   of this parameter named `enum OVS_CMD`: this interface does not
-*                   declare that enumeration, and the repository specification records
-*                   the name under `Variability Management` as a residue of the removed
-*                   Open vSwitch dependency. A caller uses `enum BridgeOpr`. Passing an
-*                   int outside that range compiles, and this interface does not state
-*                   what an implementation does with it.
+*                   to `int` to use this param. This interface declares no `enum
+*                   OVS_CMD`, so a caller holding values from that enumeration re-maps
+*                   each one onto a `BridgeOpr` member rather than assuming the two
+*                   agree on either their members or their numeric values.
+*                   Passing an int outside the `enum BridgeOpr` range compiles, and
+*                   this interface does not state what an implementation does with it.
 * @param[in] type - Types of interfaces and in case of sync delete the value is set to
 *                   IF_OTHER_BRIDGEUTIL. The range of acceptable values is `enum
 *                   INTERFACE_TYPE`, whose enumerator is cast to `int` to use this
@@ -620,8 +612,8 @@ extern int checkIfExists(char* iface_name);
 *       does not detach the interface from a bridge.
 *
 * @note This declaration is void. It yields no value and reports neither success nor
-*       failure, so this block carries no return tag of any kind - adding one would
-*       describe an outcome channel the declaration does not have.
+*       failure, so the call offers a caller no outcome channel to test: the list itself
+*       is the only evidence of what it did.
 * @note This call is synchronous and completes at the point of call, per `Blocking
 *       calls` in the repository specification. It operates on caller memory rather than
 *       on the platform, so no vendor or hardware wait arises from it, and no numeric
@@ -886,9 +878,8 @@ int HandlePostConfigVendor(bridgeDetails *bridgeInfo,int Config);
 * Because the naming is vendor-specific by definition, this is the declared means of
 * discovering it rather than hard-coding platform names.
 *
-* This function returns a value, not a status code, so the three-way distinction matters
-* when reading the result: there is no success or failure code here, and NULL is a
-* documented answer rather than an error.
+* This function returns a value, not a status code: there is no success or failure code
+* here, and NULL is a defined answer rather than an error.
 *
 * @pre None. This interface declares no initialization call and states no ordering for
 *      this function relative to any other, per `Method Sequencing` in the repository
@@ -914,9 +905,8 @@ int HandlePostConfigVendor(bridgeDetails *bridgeInfo,int Config);
 *          it is static or otherwise owned by the implementation, how long it stays
 *          valid, or whether two calls return the same buffer. The repository
 *          specification records exactly the same absence under `Memory Model` and
-*          `Object Lifecycles` rather than resolving it by inference, and this block does
-*          the same. What follows is therefore unsafe for a caller to assume, and each
-*          assumption has a distinct failure mode:
+*          `Object Lifecycles`. What follows is therefore unsafe for a caller to assume,
+*          and each assumption has a distinct failure mode:
 *          - Do not call free() on it. If the storage is static or implementation-owned,
 *            freeing it corrupts the allocator (CWE-590/CWE-762).
 *          - Do not assume the caller must free it either. If the implementation does
@@ -930,8 +920,7 @@ int HandlePostConfigVendor(bridgeDetails *bridgeInfo,int Config);
 *          and copy what is needed into caller-owned storage before doing anything else.
 *          A caller that needs to free the buffer, retain it, or share it between threads
 *          must establish the contract with the vendor implementation first; that
-*          agreement is outside this interface, and resolving it here would mean stating
-*          a guarantee the interface does not make.
+*          agreement is outside this interface.
 *
 * @note This call is synchronous and delivers its result at the point of call, per
 *       `Blocking calls` in the repository specification. No numeric timeout is

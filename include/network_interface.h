@@ -28,15 +28,14 @@
  *
  * It is an independent surface, not a part of bridge_util_hal.h. That header does not
  * include this one and nothing it declares requires this one, so a caller that needs
- * the gateway configuration record includes this header explicitly. Both nevertheless
- * appear in the generated documentation, because the generator's input is the whole
- * include directory. The repository specification states this under `Data Structures
- * and Defines` and `Optional Components` (docs/pages/halSpec.md).
+ * the gateway configuration record includes this header explicitly; the repository
+ * specification states this under `Data Structures and Defines` and `Optional
+ * Components` (docs/pages/halSpec.md).
  *
  * The type name records the header's purpose: this is the non-OVS arrangement. The
- * repository specification notes under `Variability Management` that upstream has been
- * removing the Open vSwitch dependency from this component, and that this header exists
- * to eliminate the build-time dependency on bridge utilities from OVS.
+ * repository specification records under `Variability Management` that this header
+ * exists to eliminate the build-time dependency on bridge utilities from OVS, and that
+ * no header of this component carries an Open vSwitch dependency.
  *
  * @note No function in this interface consumes any type declared here. The record is
  *       filled in and interpreted by the caller and the platform code that shares the
@@ -113,11 +112,11 @@
  */
 typedef enum IF_TYPE
 {
-    OTHER_IF_TYPE =  0, /**< Some other network interface type: the record describes an interface that is none of the four classes below, so none of the class-specific fields is implied to be meaningful. */
-    BRIDGE_IF_TYPE, /**< Network bridge interface type. The record describes a bridge itself rather than a member interface of one. */
+    OTHER_IF_TYPE =  0, /*!< Some other network interface type: the record describes an interface that is none of the four classes below, so none of the class-specific fields is implied to be meaningful. */
+    BRIDGE_IF_TYPE, /*!< Network bridge interface type. The record describes a bridge itself rather than a member interface of one. */
     ETH_IF_TYPE, /**< Network ethernet interface type. */
-    GRE_IF_TYPE, /**< Network GRE interface type. This is the class for which gre_remote_inet_addr and gre_local_inet_addr carry the tunnel endpoints; for any other class this interface does not state what those fields hold. */
-    VLAN_IF_TYPE /**< Network VLAN interface type. This is the class for which vlan_id carries the VLAN identifier; for any other class this interface does not state what that field holds. */
+    GRE_IF_TYPE, /*!< Network GRE interface type. This is the class for which gre_remote_inet_addr and gre_local_inet_addr carry the tunnel endpoints; for any other class this interface does not state what those fields hold. */
+    VLAN_IF_TYPE /*!< Network VLAN interface type. This is the class for which vlan_id carries the VLAN identifier; for any other class this interface does not state what that field holds. */
 } IF_TYPE;
 /**
  * @enum BR_CMD
@@ -146,10 +145,10 @@ typedef enum IF_TYPE
  */
 typedef enum BR_CMD
 {
-    IF_UP_CMD =  0, /**< Network interface up command: bring the named interface up. This is also the value a zero-initialised record carries. */
-    IF_DOWN_CMD, /**< Network interface down command: take the named interface down, without deleting it. */
-    IF_DELETE_CMD, /**< Network interface delete command: delete the named interface. This interface does not state whether the interface is first taken down, nor what happens if it is a member of a bridge. */
-    BR_REMOVE_CMD /**< Network bridge removal command: remove the bridge named in parent_bridge. This interface does not state what becomes of the interfaces that were members of it. */
+    IF_UP_CMD =  0, /*!< Network interface up command: bring the named interface up. This is also the value a zero-initialised record carries. */
+    IF_DOWN_CMD, /*!< Network interface down command: take the named interface down, without deleting it. */
+    IF_DELETE_CMD, /*!< Network interface delete command: delete the named interface. This interface does not state whether the interface is first taken down, nor what happens if it is a member of a bridge. */
+    BR_REMOVE_CMD /*!< Network bridge removal command: remove the bridge named in parent_bridge. This interface does not state what becomes of the interfaces that were members of it. */
 } BR_CMD;
 /**
  * @struct Gateway_Config_Non_Ovs_Bridge
@@ -169,8 +168,8 @@ typedef enum BR_CMD
  * takes it, returns it, allocates it or frees it, so it is not passed across the
  * interface boundary at all: this header fixes its layout for the caller and the
  * platform code that share the Gateway Config table. There is consequently no ownership
- * transfer to document, and no retention question of the kind that arises for
- * bridgeDetails in bridge_util_hal.h.
+ * transfer, and no retention question of the kind that arises for bridgeDetails in
+ * bridge_util_hal.h.
  *
  * @note This interface states no default for any field, no required subset for a given
  *       if_cmd, and no validation. A caller must therefore populate every field its
@@ -186,16 +185,16 @@ typedef enum BR_CMD
  */
 typedef struct Gateway_Config_Non_Ovs_Bridge
 {
-    char if_name[MAX_IF_NAME_SIZE]; /**< Network interface name: the interface this row describes, in a fixed MAX_IF_NAME_SIZE (16) byte array. This is the field that identifies the subject of if_cmd. */
-    char inet_addr[MAX_IP_ADDR_SIZE]; /**< Network IP Address of the interface, as an IPv4 address in dotted-decimal form, in a fixed MAX_IP_ADDR_SIZE (16) byte array. */
-    char netmask[MAX_IP_ADDR_SIZE]; /**< Network netmask for inet_addr, in the same dotted-decimal form and with the same bound. This interface expresses the mask as an address rather than as a prefix length, and declares no field for a prefix length. */
-    char gre_remote_inet_addr[MAX_IP_ADDR_SIZE]; /**< GRE remote IP Address: the far endpoint of the tunnel, in dotted-decimal form within MAX_IP_ADDR_SIZE (16) bytes. Meaningful for GRE_IF_TYPE; this interface does not state what it holds for any other interface type. */
-    char gre_local_inet_addr[MAX_IP_ADDR_SIZE]; /**< GRE local IP Address: the near endpoint of the tunnel, on the same terms as gre_remote_inet_addr. */
-    char parent_ifname[MAX_IF_NAME_SIZE]; /**< Parent network interface name: the interface this one is built over, such as the physical interface beneath a VLAN, in a fixed MAX_IF_NAME_SIZE (16) byte array. This interface does not state what an empty value means. */
-    char parent_bridge[MAX_BRIDGE_NAME_SIZE]; /**< Parent network bridge name: the bridge this interface belongs to, in a fixed MAX_BRIDGE_NAME_SIZE (16) byte array. It is also the bridge that BR_REMOVE_CMD names as its subject. */
-    int mtu; /**< MTU packet size in bytes for the interface. This interface states no valid range and no sentinel for "unset", so a caller must not assume that zero is treated as "leave unchanged" or that an out-of-range value is rejected. */
-    int vlan_id; /**< VLAN ID for the interface. Meaningful for VLAN_IF_TYPE; this interface states no valid range, so a caller must not assume the 802.1Q range is validated, and states nothing about the field's meaning for other interface types. */
-    IF_TYPE if_type; /**< Network interface type: which class of interface this row describes, and therefore which of the class-specific fields above are meaningful. */
-    BR_CMD if_cmd; /**< Network interface/bridge command: what is to be done with the interface or bridge identified above. Note that the zero value is IF_UP_CMD, not an absence of command. */
+    char if_name[MAX_IF_NAME_SIZE]; /*!< Network interface name: the interface this row describes, in a fixed MAX_IF_NAME_SIZE (16) byte array. This is the field that identifies the subject of if_cmd. */
+    char inet_addr[MAX_IP_ADDR_SIZE]; /*!< Network IP Address of the interface, as an IPv4 address in dotted-decimal form, in a fixed MAX_IP_ADDR_SIZE (16) byte array. */
+    char netmask[MAX_IP_ADDR_SIZE]; /*!< Network netmask for inet_addr, in the same dotted-decimal form and with the same bound. This interface expresses the mask as an address rather than as a prefix length, and declares no field for a prefix length. */
+    char gre_remote_inet_addr[MAX_IP_ADDR_SIZE]; /*!< GRE remote IP Address: the far endpoint of the tunnel, in dotted-decimal form within MAX_IP_ADDR_SIZE (16) bytes. Meaningful for GRE_IF_TYPE; this interface does not state what it holds for any other interface type. */
+    char gre_local_inet_addr[MAX_IP_ADDR_SIZE]; /*!< GRE local IP Address: the near endpoint of the tunnel, on the same terms as gre_remote_inet_addr. */
+    char parent_ifname[MAX_IF_NAME_SIZE]; /*!< Parent network interface name: the interface this one is built over, such as the physical interface beneath a VLAN, in a fixed MAX_IF_NAME_SIZE (16) byte array. This interface does not state what an empty value means. */
+    char parent_bridge[MAX_BRIDGE_NAME_SIZE]; /*!< Parent network bridge name: the bridge this interface belongs to, in a fixed MAX_BRIDGE_NAME_SIZE (16) byte array. It is also the bridge that BR_REMOVE_CMD names as its subject. */
+    int mtu; /*!< MTU packet size in bytes for the interface. This interface states no valid range and no sentinel for "unset", so a caller must not assume that zero is treated as "leave unchanged" or that an out-of-range value is rejected. */
+    int vlan_id; /*!< VLAN ID for the interface. Meaningful for VLAN_IF_TYPE; this interface states no valid range, so a caller must not assume the 802.1Q range is validated, and states nothing about the field's meaning for other interface types. */
+    IF_TYPE if_type; /*!< Network interface type: which class of interface this row describes, and therefore which of the class-specific fields above are meaningful. */
+    BR_CMD if_cmd; /*!< Network interface/bridge command: what is to be done with the interface or bridge identified above. Note that the zero value is IF_UP_CMD, not an absence of command. */
 } Gateway_Config_Non_Ovs_Bridge;
 #endif
