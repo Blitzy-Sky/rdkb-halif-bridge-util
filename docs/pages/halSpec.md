@@ -6,7 +6,7 @@ This table records revisions of *this document*. It is not the version of the in
 
 | Date | Comment | Version |
 | --- | --- | --- |
-| 08/24/26 | Brought to the canonical `HAL` specification topic set. Every declared `API` is now named, the two misspelt identifiers in the sequence diagram are corrected, the four version identities are separated, and the interface's own return convention, public types and status values are documented. | 0.1.0 |
+| 2026-08-24 | Brought to the canonical `HAL` specification topic set. Every declared `API` is now named, the two misspelt identifiers in the sequence diagram are corrected, the four version identities are separated, and the interface's own return convention, public types and status values are documented. | 0.1.0 |
 
 This document carried no `Version History` before this change, so the row above is the first one recorded rather than a claim that the document is new.
 
@@ -26,15 +26,15 @@ The repository's release lineage, taken from `CHANGELOG.md`, is below. It is the
 
 | Release | Date recorded in `CHANGELOG.md` | Notable change |
 | --- | --- | --- |
+| `1.0.0` | 2024-04-17 | Migration of the Bridge Util `HAL` header to GitHub. |
+| `1.1.0` | 2024-05-24 | Header and specification updates. |
+| `1.1.1` | 2024-05-24 | Removal of the `OVS` agent API header from `bridge_util_hal.h`. |
+| `1.2.0` | 2024-07-10 | Work on removing the `OVS` dependency, including one revert and re-application. |
+| `1.2.1` | 2025-07-31 | New enumerators for the mesh onboard bridges. |
+| `1.2.2` | 2025-08-01 | DHCP Option 82 support for the connected building amenity network. |
 | `1.3.0` | none recorded | Merge of the `1.2.2` tag into the development branch. |
-| `1.2.2` | 1 August 2025 | DHCP Option 82 support for the connected building amenity network. |
-| `1.2.1` | 31 July 2025 | New enumerators for the mesh onboard bridges. |
-| `1.2.0` | 10 July 2024 | Work on removing the `OVS` dependency, including one revert and re-application. |
-| `1.1.1` | 24 May 2024 | Removal of the `OVS` agent API header from `bridge_util_hal.h`. |
-| `1.1.0` | 24 May 2024 | Header and specification updates. |
-| `1.0.0` | 17 April 2024 | Migration of the Bridge Util `HAL` header to GitHub. |
 
-**Provenance of this page.** It was renamed from `docs/pages/BridgeUtilHalSpec.md` to `docs/pages/halSpec.md` in the same change that rewrote it against the canonical topic set. Git records a rename only where the two versions still resemble each other, and a full rewrite does not, so `git log --follow -- docs/pages/halSpec.md` begins at that change: the revisions before it are reached with `git log -- docs/pages/BridgeUtilHalSpec.md`.
+**Provenance of this page.** It was renamed from `docs/pages/BridgeUtilHalSpec.md` to `docs/pages/halSpec.md` in the same change that rewrote it against the canonical topic set. Git records a rename only where the two versions still resemble each other, and a full rewrite does not, so `git log --follow -- docs/pages/halSpec.md` begins at that change: the revisions before it are reached with `git log -- docs/pages/BridgeUtilHalSpec.md`. That resemblance is measured, and the threshold is 50% by default, so lowering it to git's floor \- `git log --follow -M1% -- docs/pages/halSpec.md` \- is worth trying first: where it pairs the two paths it shows both stretches of history in one listing, and where the rewrite kept too little of the original for git to pair them at any threshold the second command above remains the only route to the earlier revisions.
 
 ## Acronyms
 
