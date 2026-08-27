@@ -30,7 +30,7 @@
  * include this one and nothing it declares requires this one, so a caller that needs
  * the gateway configuration record includes this header explicitly; the repository
  * specification states this under `Data Structures and Defines` and `Optional
- * Components` (docs/pages/halSpec.md).
+ * Components` in the HAL specification.
  *
  * The type name records the header's purpose: this is the non-OVS arrangement. The
  * repository specification records under `Variability Management` that this header

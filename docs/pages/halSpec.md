@@ -10,21 +10,21 @@ This table records revisions of *this document*. It is not the version of the in
 
 This document carried no `Version History` before this change, so the row above is the first one recorded rather than a claim that the document is new.
 
-**Provenance: this page supersedes `docs/pages/BridgeUtilHalSpec.md`.** That file was this repository's `HAL` specification until the documentation work recorded in the row above replaced it, at which point the specification moved to the canonical filename `docs/pages/halSpec.md` that every `RDK-B` `HAL` repository now uses. The predecessor is not lost \- it is readable at `git show 2b0bde2^:docs/pages/BridgeUtilHalSpec.md` \- but two things about the transition are worth stating plainly, because a reader tracing this document's lineage will otherwise be misled by the tooling.
+**Provenance: this page supersedes `docs/pages/BridgeUtilHalSpec.md`.** That file was this repository's `HAL` specification until the documentation work recorded in the row above replaced it, at which point the specification moved to the canonical filename [halSpec.md](halSpec.md) that every `RDK-B` `HAL` repository now uses. The predecessor is not lost \- it is readable at `git show 2b0bde2^:docs/pages/BridgeUtilHalSpec.md` \- but two things about the transition are worth stating plainly, because a reader tracing this document's lineage will otherwise be misled by the tooling.
 
 - **The content was rewritten, not moved.** The replacement was authored against the two headers rather than edited down from the old page, so the two files share effectively no text. Every topic here is new or substantially reworked, and the old page's claims were checked against the declarations rather than carried forward \- which is how the two misspelt identifiers and the stale statements this revision corrects were found.
-- **Git rename detection therefore does not link the two paths.** Because the similarity between them is effectively zero, `git` reports the change as one deletion and one addition rather than as a rename, and it does so even with detection forced to its one-per-cent floor (`git show --raw -M1% --find-renames=1% 2b0bde2 -- docs/pages/`). `git log --follow docs/pages/halSpec.md` consequently stops at the commit that introduced this file and does not continue into the predecessor's history. A reader who needs that history reads the old path directly with `git log -- docs/pages/BridgeUtilHalSpec.md`, which returns the predecessor's eleven commits back to the header's migration to GitHub. This paragraph exists because the tooling cannot state the relationship, so the document states it instead.
+- **Git rename detection therefore does not link the two paths.** Because the similarity between them is effectively zero, `git` reports the change as one deletion and one addition rather than as a rename, and it does so even with detection forced to its one-per-cent floor (`git show --raw -M1% --find-renames=1% 2b0bde2 -- docs/pages/`). `git log --follow ./docs/pages/halSpec.md` consequently stops at the commit that introduced this file and does not continue into the predecessor's history. A reader who needs that history reads the old path directly with `git log -- docs/pages/BridgeUtilHalSpec.md`, which returns the predecessor's eleven commits back to the header's migration to GitHub. This paragraph exists because the tooling cannot state the relationship, so the document states it instead.
 
 Four version identities exist around this interface, and a reader who conflates them will draw the wrong conclusion about how mature it is:
 
 - **Document revision** \- the `Version` column above. This document is at `0.1.0`.
-- **Release tag** \- `1.3.0` is the latest tag and the release this document describes. `CHANGELOG.md` records it **without a date**; its only entry is a merge of the preceding tag, so no release date is claimed here.
+- **Release tag** \- `1.3.0` is the latest tag and the release this document describes. The repository's changelog records it **without a date**; its only entry is a merge of the preceding tag, so no release date is claimed here.
 - **Interface version** \- **not exposed programmatically.** Neither `bridge_util_hal.h` nor `network_interface.h` declares a version macro, so a caller cannot test the interface version at compile time or at runtime, and the release tag above must not be read as one. See `Variability Management`.
 - **Generated-site version string** \- `docs/generate_docs.sh` derives `PROJECT_VERSION` from `git describe --tags` and passes it verbatim to the documentation generator, so the title of the generated site carries a string of the form `<tag>-<commits-since-tag>-g<abbreviated-commit>`: the `1.3.0` tag, the number of commits made since it, and an abbreviated commit hash. **No literal value for it is recorded here, because it advances with every commit** \- any value written into this document would be wrong from the next commit onward, and a stale one invites a reader to mistake a build coordinate for a released version. It is a build identifier, not a released version of either the interface or this document. A reader comparing two generated sites compares the tag portion and treats the suffix as a build coordinate.
 
-The repository's release lineage, taken from `CHANGELOG.md`, is below. It is the release identity, not the document identity.
+The repository's release lineage, taken from the repository's changelog, is below. It is the release identity, not the document identity.
 
-| Release | Date recorded in `CHANGELOG.md` | Notable change |
+| Release | Date recorded in the changelog | Notable change |
 | --- | --- | --- |
 | `1.0.0` | 2024-04-17 | Migration of the Bridge Util `HAL` header to GitHub. |
 | `1.1.0` | 2024-05-24 | Header and specification updates. |
@@ -33,8 +33,6 @@ The repository's release lineage, taken from `CHANGELOG.md`, is below. It is the
 | `1.2.1` | 2025-07-31 | New enumerators for the mesh onboard bridges. |
 | `1.2.2` | 2025-08-01 | DHCP Option 82 support for the connected building amenity network. |
 | `1.3.0` | none recorded | Merge of the `1.2.2` tag into the development branch. |
-
-**Provenance of this page.** It was renamed from `docs/pages/BridgeUtilHalSpec.md` to `docs/pages/halSpec.md` in the same change that rewrote it against the canonical topic set. Git records a rename only where the two versions still resemble each other, and a full rewrite does not, so `git log --follow -- docs/pages/halSpec.md` begins at that change: the revisions before it are reached with `git log -- docs/pages/BridgeUtilHalSpec.md`. That resemblance is measured, and the threshold is 50% by default, so lowering it to git's floor \- `git log --follow -M1% -- docs/pages/halSpec.md` \- is worth trying first: where it pairs the two paths it shows both stretches of history in one listing, and where the rewrite kept too little of the original for git to pair them at any threshold the second command above remains the only route to the earlier revisions.
 
 ## Acronyms
 
@@ -73,9 +71,9 @@ This repository ships no architecture image, and none is added; the flowchart ab
 
 The following components are optional and it is up to the vendor's discretion whether to use them.
 
-- **`MANAGE_WIFI_BRIDGE`** \- an `enum Config` member with the value `17`, declared only when `WIFI_MANAGE_SUPPORTED` is defined. A build without that flag does not declare the enumerator, so a caller must not pass its value.
+- `MANAGE_WIFI_BRIDGE` \- an `enum Config` member with the value `17`, declared only when `WIFI_MANAGE_SUPPORTED` is defined. A build without that flag does not declare the enumerator, so a caller must not pass its value.
 - **The amenity bridges** \- `AMENITY_BRIDGE_2G`, `AMENITY_BRIDGE_5G` and `AMENITY_BRIDGE_6G`, with the values `20`, `21` and `22`, declared only when `AMENITIES_NETWORK_ENABLED` is defined **and** `_CBR2_PRODUCT_REQ_` is not. Both conditions must hold.
-- **`network_interface.h`** \- an independent type surface a caller opts into by including it explicitly. It declares no functions and nothing in `bridge_util_hal.h` requires it; a caller that does not need the gateway configuration record never includes it. See `Data Structures and Defines`.
+- `network_interface.h` \- an independent type surface a caller opts into by including it explicitly. It declares no functions and nothing in `bridge_util_hal.h` requires it; a caller that does not need the gateway configuration record never includes it. See `Data Structures and Defines`.
 
 Beyond these, this interface establishes no optional components. The seven declared functions are all mandatory: a vendor implements every one of them, and a build variant that omits any of them does not satisfy this interface.
 
@@ -168,9 +166,9 @@ The interface defines exactly one status convention, and two named constants for
 
 Three properties of this convention need stating, because each one is a way a caller can misread it:
 
-- **`checkIfExists` reports a fact, not a failure.** `-1` from it means the interface is absent, which is a legitimate answer to the question asked, not an error in the call. A caller must not treat it as one.
-- **`removeIfaceFromList` reports nothing at all.** It returns `void`. Its own declaration states that when the named interface is not in the list, no action is taken and no error is reported, so a caller that needs to know whether the removal happened must determine it by inspecting the list.
-- **`getVendorIfaces` returns `NULL` for "no interfaces".** Its declaration gives `NULL` that meaning specifically. It does not state a distinct indication for a failure to determine the answer, so a caller cannot distinguish "no interfaces" from "could not tell" through the return value alone. This interface does not specify that distinction.
+- `checkIfExists` **reports a fact, not a failure.** `-1` from it means the interface is absent, which is a legitimate answer to the question asked, not an error in the call. A caller must not treat it as one.
+- `removeIfaceFromList` **reports nothing at all.** It returns `void`. Its own declaration states that when the named interface is not in the list, no action is taken and no error is reported, so a caller that needs to know whether the removal happened must determine it by inspecting the list.
+- `getVendorIfaces` **returns `NULL` for "no interfaces".** Its declaration gives `NULL` that meaning specifically. It does not state a distinct indication for a failure to determine the answer, so a caller cannot distinguish "no interfaces" from "could not tell" through the return value alone. This interface does not specify that distinction.
 
 **No richer error enumeration is declared.** There is no error `enum` and no code beyond the two named constants above, so an implementation cannot report a reason for a failure through this interface, and a caller cannot branch on one. Widening that would be a change to the interface rather than to this document.
 
@@ -222,9 +220,9 @@ The Bridge Util `HAL` implementation should pass checks using third-party tools 
 
 There should be no memory leaks or memory corruption introduced by the `HAL` or by the underlying third-party software implementation.
 
-**Keeping this document accurate is a triggered obligation, not a scheduled one.** Every topic here is derived from a named file, and a review date would be stale the moment the interface moved. So the trigger is this: **any change to a file this document cites obliges a review of the topics that cite it.** A change to `bridge_util_hal.h` or `network_interface.h` obliges a review of `Data Structures and Defines`, `API Surface`, `Internal Error Handling`, `State Diagram` and `Theory of operation and key concepts`; a change to `CHANGELOG.md` obliges a review of `Version History`; a change to `docs/generate_docs.sh` obliges a review of `Build Requirements` and of the generated-site version identity.
+**Keeping this document accurate is a triggered obligation, not a scheduled one.** Every topic here is derived from a named file, and a review date would be stale the moment the interface moved. So the trigger is this: **any change to a file this document cites obliges a review of the topics that cite it.** A change to `bridge_util_hal.h` or `network_interface.h` obliges a review of `Data Structures and Defines`, `API Surface`, `Internal Error Handling`, `State Diagram` and `Theory of operation and key concepts`; a change to the repository's changelog obliges a review of `Version History`; a change to `docs/generate_docs.sh` obliges a review of `Build Requirements` and of the generated-site version identity.
 
-That obligation needs an addressee. This repository declares no `CODEOWNERS` file, so the responsible reviewer is the maintainer group that `CONTRIBUTING.md` directs a contribution to: changes are raised as an issue and submitted as a pull request against this repository, and the team reviews them and merges accepted changes to the mainline.
+That obligation needs an addressee. This repository declares no `CODEOWNERS` file, so the responsible reviewer is the maintainer group that the repository's contribution guide directs a contribution to: changes are raised as an issue and submitted as a pull request against this repository, and the team reviews them and merges accepted changes to the mainline.
 
 ### Licensing
 
@@ -281,8 +279,8 @@ This topic previously read `None`, which was not accurate: several parts of this
 
 All `HAL` function prototypes and datatype definitions are available in the `bridge_util_hal.h` file.
 
-1. Components and processes must include [`bridge_util_hal.h`](../../include/bridge_util_hal.h) to make use of Bridge Util `HAL` capabilities.
-2. Components and processes that need the gateway configuration record must additionally include [`network_interface.h`](../../include/network_interface.h), which is not included by the first header.
+1. Components and processes must include `bridge_util_hal.h` to make use of Bridge Util `HAL` capabilities.
+2. Components and processes that need the gateway configuration record must additionally include `network_interface.h`, which is not included by the first header.
 
 No linker dependency is named here, because this repository declares none; see `Build Requirements`.
 
@@ -332,7 +330,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 
 **The two headers are independent surfaces.** `bridge_util_hal.h` does **not** include `network_interface.h`, and `network_interface.h` contains no `#include` directive at all and declares no function. A caller that needs the gateway configuration record includes that header explicitly. Both nevertheless appear in the generated documentation, because the generator's input is the whole `include` directory.
 
-**Macro constants** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h).
+**Macro constants** \- `bridge_util_hal.h`.
 
 | Constant | Value | Represents |
 | --- | --- | --- |
@@ -347,7 +345,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `INTERFACE_EXIST` | `0` | The named success value reported by `checkIfExists` when the interface is present. |
 | `INTERFACE_NOT_EXIST` | `-1` | The named value reported by `checkIfExists` when the interface is absent. |
 
-**Caller-supplied globals** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h). These fifteen symbols are declared `extern` by the interface and defined by the caller's program. They are shared mutable state; see `Threading Model` and `Process Model`.
+**Caller-supplied globals** \- `bridge_util_hal.h`. These fifteen symbols are declared `extern` by the interface and defined by the caller's program. They are shared mutable state; see `Threading Model` and `Process Model`.
 
 | Symbol | Type | Represents |
 | --- | --- | --- |
@@ -367,7 +365,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `timeinfo` | `struct tm *` | Broken-down time used to build the log timestamp. |
 | `utc_time` | `time_t` | The `UTC` time value used to build the log timestamp. |
 
-**`enum Config`** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h). The configuration instance a vendor hook is being invoked for, cast to `int` at the call. **The values are not contiguous:** `5`, `15` and `16` are not assigned by the unconditional set, and the conditional enumerators are not contiguous with it either, so a caller must use the enumerators and never arithmetic on them.
+`enum Config` \- `bridge_util_hal.h`. The configuration instance a vendor hook is being invoked for, cast to `int` at the call. **The values are not contiguous:** `5`, `15` and `16` are not assigned by the unconditional set, and the conditional enumerators are not contiguous with it either, so a caller must use the enumerators and never arithmetic on them.
 
 | Enumerator | Value | Represents |
 | --- | --- | --- |
@@ -391,7 +389,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `AMENITY_BRIDGE_5G` | `21` | The 5 GHz amenity bridge. Conditional; see `Optional Components`. |
 | `AMENITY_BRIDGE_6G` | `22` | The 6 GHz amenity bridge. Conditional; see `Optional Components`. |
 
-**`enum INTERFACE_TYPE`** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h). The kind of interface an `updateBridgeInfo` call concerns, cast to `int` at the call.
+`enum INTERFACE_TYPE` \- `bridge_util_hal.h`. The kind of interface an `updateBridgeInfo` call concerns, cast to `int` at the call.
 
 | Enumerator | Value | Represents |
 | --- | --- | --- |
@@ -403,14 +401,14 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `IF_ETH_BRIDGEUTIL` | `6` | An Ethernet interface. |
 | `IF_OTHER_BRIDGEUTIL` | implicitly `7` | Any other or unspecified interface type. It carries no explicit initialiser and takes the value after `IF_ETH_BRIDGEUTIL`. Also the value used for the sync-delete case. |
 
-**`enum BridgeOpr`** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h). The operation an `updateBridgeInfo` call performs, cast to `int` at the call. This is the enumeration that argument's range actually comes from.
+`enum BridgeOpr` \- `bridge_util_hal.h`. The operation an `updateBridgeInfo` call performs, cast to `int` at the call. This is the enumeration that argument's range actually comes from.
 
 | Enumerator | Value | Represents |
 | --- | --- | --- |
 | `DELETE_BRIDGE` | `0` | Delete the bridge. |
 | `CREATE_BRIDGE` | `1` | Create the bridge. |
 
-**`bridgeDetails`** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h). The bridge record a caller populates and passes by pointer. Eight fields; the example values are those the declaration documents.
+`bridgeDetails` \- `bridge_util_hal.h`. The bridge record a caller populates and passes by pointer. Eight fields; the example values are those the declaration documents.
 
 | Field | Type | Represents |
 | --- | --- | --- |
@@ -423,9 +421,9 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `GreIfList` | `char[IFLIST_SIZE]` | The `GRE` interface list, such as `gre0`, `gre1`. |
 | `WiFiIfList` | `char[IFLIST_SIZE]` | The Wi-Fi interface list, such as `wlan0`, `wlan1`. |
 
-**Logging macro** \- [`bridge_util_hal.h`](../../include/bridge_util_hal.h). `bridge_util_log` is a variadic macro taking a format string and its arguments. Its behaviour is described under `Logging and debugging requirements`.
+**Logging macro** \- `bridge_util_hal.h`. `bridge_util_log` is a variadic macro taking a format string and its arguments. Its behaviour is described under `Logging and debugging requirements`.
 
-**Size constants** \- [`network_interface.h`](../../include/network_interface.h).
+**Size constants** \- `network_interface.h`.
 
 | Constant | Value | Represents |
 | --- | --- | --- |
@@ -433,7 +431,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `MAX_IP_ADDR_SIZE` | `16` | The buffer size for a dotted-quad IPv4 address string, including the terminating null character. |
 | `MAX_BRIDGE_NAME_SIZE` | `16` | The buffer size for a network bridge name, including the terminating null character. |
 
-**`IF_TYPE`** \- [`network_interface.h`](../../include/network_interface.h). The interface type used by the gateway configuration record. Distinct from `enum INTERFACE_TYPE` above, which belongs to the other header and has different members.
+`IF_TYPE` \- `network_interface.h`. The interface type used by the gateway configuration record. Distinct from `enum INTERFACE_TYPE` above, which belongs to the other header and has different members.
 
 | Enumerator | Value | Represents |
 | --- | --- | --- |
@@ -443,7 +441,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `GRE_IF_TYPE` | implicitly `3` | A network `GRE` interface. |
 | `VLAN_IF_TYPE` | implicitly `4` | A network `VLAN` interface. |
 
-**`BR_CMD`** \- [`network_interface.h`](../../include/network_interface.h). The command the gateway configuration record carries for an interface or bridge.
+`BR_CMD` \- `network_interface.h`. The command the gateway configuration record carries for an interface or bridge.
 
 | Enumerator | Value | Represents |
 | --- | --- | --- |
@@ -452,7 +450,7 @@ A caller of this interface constructs or interprets the types below. Each table 
 | `IF_DELETE_CMD` | implicitly `2` | Delete the network interface. |
 | `BR_REMOVE_CMD` | implicitly `3` | Remove the network bridge. |
 
-**`Gateway_Config_Non_Ovs_Bridge`** \- [`network_interface.h`](../../include/network_interface.h). The gateway configuration record, whose name states its purpose: it is the non-`OVS` arrangement. Eleven fields.
+`Gateway_Config_Non_Ovs_Bridge` \- `network_interface.h`. The gateway configuration record, whose name states its purpose: it is the non-`OVS` arrangement. Eleven fields.
 
 | Field | Type | Represents |
 | --- | --- | --- |
@@ -472,20 +470,20 @@ A caller of this interface constructs or interprets the types below. Each table 
 
 This topic is the boundary between the two ways of reading this document. Everything above answers "what is this interface and how do I drive it"; from here on the document answers "exactly what is declared, and what happens when it fails". All **seven** declared functions are named below by exact identifier, grouped by role, with the purpose taken from the declaration's own documentation. The header link beside each group is where the per-`API` detail lives: parameter ranges, ownership, pre-conditions and the return values each function can produce.
 
-**Vendor hooks \- 2 declared functions.** Implemented by the vendor and called by the client either side of a bridge change, so that `OEM` and `SoC` specific configuration is applied around it. Detail: [`bridge_util_hal.h`](../../include/bridge_util_hal.h)
+**Vendor hooks \- 2 declared functions.** Implemented by the vendor and called by the client either side of a bridge change, so that `OEM` and `SoC` specific configuration is applied around it. Detail: [bridge_util_hal.h](../../include/bridge_util_hal.h)
 
 | API | Purpose |
 | --- | --- |
 | `HandlePreConfigVendor` | Applies vendor-specific configuration before the client calls `updateBridgeInfo`. |
 | `HandlePostConfigVendor` | Applies vendor-specific configuration after the client calls `updateBridgeInfo`. |
 
-**Bridge mutation \- 1 declared function.** Detail: [`bridge_util_hal.h`](../../include/bridge_util_hal.h)
+**Bridge mutation \- 1 declared function.** Detail: [bridge_util_hal.h](../../include/bridge_util_hal.h)
 
 | API | Purpose |
 | --- | --- |
 | `updateBridgeInfo` | Creates, updates or deletes a bridge according to the operation and interface type supplied, and handles the sync-delete case. |
 
-**Interface queries \- 3 declared functions.** Detail: [`bridge_util_hal.h`](../../include/bridge_util_hal.h)
+**Interface queries \- 3 declared functions.** Detail: [bridge_util_hal.h](../../include/bridge_util_hal.h)
 
 | API | Purpose |
 | --- | --- |
@@ -493,7 +491,7 @@ This topic is the boundary between the two ways of reading this document. Everyt
 | `checkIfExistsInBridge` | Reports the outcome of testing whether a named interface is attached to a named bridge. |
 | `getVendorIfaces` | Retrieves the vendor-specific interface names available for bridge management. |
 
-**Interface-list mutation \- 1 declared function.** Detail: [`bridge_util_hal.h`](../../include/bridge_util_hal.h)
+**Interface-list mutation \- 1 declared function.** Detail: [bridge_util_hal.h](../../include/bridge_util_hal.h)
 
 | API | Purpose |
 | --- | --- |
@@ -509,12 +507,12 @@ This topic is the boundary between the two ways of reading this document. Everyt
 | `HandlePreConfigVendor` | status | `0` on success, `-1` on failure. |
 | `HandlePostConfigVendor` | status | `0` on success, `-1` on failure. |
 | `getVendorIfaces` | **value** | A zero-terminated vendor interface name string, or `NULL` for no interfaces. Not a status code. |
-| `removeIfaceFromList` | **`void`** | Nothing. The call reports neither success nor failure. |
+| `removeIfaceFromList` | `void` | Nothing. The call reports neither success nor failure. |
 
 Two distinctions in that table are easy to lose and matter to anyone writing a test against this interface:
 
-- **`checkIfExists` names its two outcomes; `checkIfExistsInBridge` does not.** The first declaration maps `0` and `-1` onto `INTERFACE_EXIST` and `INTERFACE_NOT_EXIST` explicitly, so "absent" is a documented answer rather than a failure. The second documents only success and failure and does not say which of them corresponds to the interface being attached, so a caller must not read `-1` from it as a confirmed "not attached" without establishing that with the implementation. This interface does not specify it.
-- **`getVendorIfaces` is value-returning, so `NULL` is not an error code.** Its declaration gives `NULL` the meaning "no interfaces". It defines no separate indication for a failure to determine the answer, so the two cases are not distinguishable through the return value.
+- `checkIfExists` **names its two outcomes; `checkIfExistsInBridge` does not.** The first declaration maps `0` and `-1` onto `INTERFACE_EXIST` and `INTERFACE_NOT_EXIST` explicitly, so "absent" is a documented answer rather than a failure. The second documents only success and failure and does not say which of them corresponds to the interface being attached, so a caller must not read `-1` from it as a confirmed "not attached" without establishing that with the implementation. This interface does not specify it.
+- `getVendorIfaces` **is value-returning, so `NULL` is not an error code.** Its declaration gives `NULL` the meaning "no interfaces". It defines no separate indication for a failure to determine the answer, so the two cases are not distinguishable through the return value.
 
 ### Sequence Diagram
 
@@ -555,7 +553,7 @@ sequenceDiagram
     H-->>C: 0 on success, -1 on failure
 ```
 
-Fenced Mermaid renders on GitHub, which the repository's `README.md` symlink makes the primary reading surface for this document. It does **not** render in the `HTML` the documentation generator produces, where the block appears as its source text instead. That limitation is stated here rather than worked around, because the alternative that would fix the generated site would stop the diagram rendering on the surface most readers use.
+Fenced Mermaid renders on GitHub, which the repository's README symlink makes the primary reading surface for this document. It does **not** render in the `HTML` the documentation generator produces, where the block appears as its source text instead. That limitation is stated here rather than worked around, because the alternative that would fix the generated site would stop the diagram rendering on the surface most readers use.
 
 ### State Diagram
 

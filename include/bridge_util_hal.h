@@ -37,7 +37,7 @@
 *   HandlePostConfigVendor() are implemented by the vendor and called by the client
 *   either side of updateBridgeInfo(), which is the one ordering this interface fixes.
 *   See `Initialization and Startup` and `Method Sequencing` in the repository
-*   specification (docs/pages/halSpec.md).
+*   specification.
 * - The interface is not required to be thread safe, which is this repository's own
 *   statement under `Threading Model`, and the calling module is the party obliged to
 *   serialise its calls. Calls are expected from multiple processes, and the globals
@@ -131,7 +131,7 @@
  * declared function may modify which symbol; a caller must therefore not infer from
  * this interface when a value changes or what an implementation does differently for
  * a given value. See `Object Lifecycles` and `State-Dependent Behavior` in the
- * repository specification (docs/pages/halSpec.md).
+ * repository specification.
  */
 
 extern int DeviceMode;                                          /*!< The device role the caller's platform is operating in: 0 is router operation and 2 is bridge operation. This interface declares the symbol and documents those two values, but does not state how an implementation's behaviour changes with it, so a caller must not infer a per-mode contract from this interface alone. */
@@ -220,7 +220,7 @@ extern time_t utc_time;						/*!< The UTC time value bridge_util_log() reads fro
  * the call site. Passing an int that is not one of the members below compiles but is
  * outside the contract, and this interface does not state what an implementation does
  * with such a value. The convention is recorded under `State-Dependent Behavior` in
- * the repository specification (docs/pages/halSpec.md).
+ * the repository specification.
  *
  * @note The values are deliberately not contiguous: 5, 15, 16 and 17 are not assigned
  *       by the unconditional set - 17 belongs to the conditional MANAGE_WIFI_BRIDGE -
@@ -276,7 +276,7 @@ enum Config {
  * @note Passing an int that is not one of the members below compiles but is outside
  *       the contract, and this interface does not state what an implementation does
  *       with such a value. See `State-Dependent Behavior` in the repository
- *       specification (docs/pages/halSpec.md).
+ *       specification.
  * @note This enumeration is distinct from IF_TYPE in network_interface.h, which has
  *       different members and different values and belongs to that independent header.
  *       The two are not interchangeable.
