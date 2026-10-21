@@ -105,15 +105,13 @@ There are no asynchronous notifications. `HandlePreConfigVendor` and `HandlePost
 
 ### Blocking calls
 
-**Synchronous and Responsive:** all `API`s operate synchronously and deliver their result as the return value at the point of call. Each is expected to complete within a period commensurate with the complexity of the operation.
+**Synchronous and Responsive:** all `API`s operate synchronously and complete at the point of call; each is expected to finish within a period commensurate with the complexity of the operation.
 
 **Hardware readiness:** the interface is expected to block until the underlying hardware is ready; a caller must therefore expect a bridge configuration sequence \- `HandlePreConfigVendor`, `updateBridgeInfo`, `HandlePostConfigVendor` \- to block.
 
 ### Internal Error Handling
 
-**Synchronous Error Handling:** every Bridge Util `HAL` `API` reports its outcome synchronously as its return value.
-
-**Internal Error Reporting:** the `HAL` handles system errors, such as an out-of-memory condition, internally, reports the outcome through the return value, and logs the detail needed for investigation; see `Logging and debugging requirements`.
+**Internal Error Reporting:** the `HAL` handles system errors, such as an out-of-memory condition, internally and logs the detail needed for investigation; see `Logging and debugging requirements`. The table below lists what each `API` returns and the caller action that follows.
 
 | API | Return value | Caller action |
 | --- | --- | --- |
