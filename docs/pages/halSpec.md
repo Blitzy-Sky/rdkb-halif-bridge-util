@@ -26,11 +26,9 @@
 The diagram below shows where the Bridge Util `HAL` sits in the `RDK-B` software stack.
 
 ```mermaid
-flowchart TD;
-    CALLER["RDK-B Middleware"] <-->
-    BRIDGEUTILHAL["Bridge Util HAL - bridge_util_hal.h"] <-->
-    VENDORSOFTWARE["Vendor Software"] <-->
-    VENDORCONFIG["Vendor bridge and network interface configuration"]
+flowchart TD
+    Caller["RDK-B Middleware"] <--> HAL["Bridge Util HAL - bridge_util_hal.h"]
+    HAL <--> Vendor["Vendor Software"]
 ```
 
 The Bridge Util `HAL` is an abstraction layer through which the RDK-B Middleware drives vendor bridge configuration \- bridge modes, connection enable and disable, `QoS` configuration and IPv4 configuration \- without depending on how a particular platform implements it.
