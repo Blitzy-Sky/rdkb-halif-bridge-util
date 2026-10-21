@@ -23,7 +23,7 @@
 
 ## Description
 
-The diagram below shows where the Bridge Util `HAL` sits in the `RDK-B` software stack.
+The diagram below shows where the Bridge Util HAL sits in the `RDK-B` software stack.
 
 ```mermaid
 flowchart TD
@@ -31,7 +31,7 @@ flowchart TD
     HAL <--> Vendor["Vendor Software"]
 ```
 
-The Bridge Util `HAL` is an abstraction layer through which the RDK-B Middleware drives vendor bridge configuration \- bridge modes, connection enable and disable, `QoS` configuration and IPv4 configuration \- without depending on how a particular platform implements it.
+The Bridge Util HAL is an abstraction layer through which the RDK-B Middleware drives vendor bridge configuration \- bridge modes, connection enable and disable, `QoS` configuration and IPv4 configuration \- without depending on how a particular platform implements it.
 
 This repository holds the interface definition only; a vendor supplies the implementation. No dedicated middleware service owns this interface, so the RDK-B Middleware calls it directly.
 
@@ -42,7 +42,7 @@ The interface declares seven functions: two vendor hooks that bracket a bridge c
 The following components are optional and it is up to the vendor's discretion whether to use them.
 
 - `MANAGE_WIFI_BRIDGE` \- the `enum Config` member with the value `17`, declared only when `WIFI_MANAGE_SUPPORTED` is defined.
-- **The amenity bridges** \- `AMENITY_BRIDGE_2G`, `AMENITY_BRIDGE_5G` and `AMENITY_BRIDGE_6G`, with the values `20`, `21` and `22`, declared only when `AMENITIES_NETWORK_ENABLED` is defined **and** `_CBR2_PRODUCT_REQ_` is not.
+- **The amenity bridges:** `AMENITY_BRIDGE_2G`, `AMENITY_BRIDGE_5G` and `AMENITY_BRIDGE_6G`, with the values `20`, `21` and `22`, declared only when `AMENITIES_NETWORK_ENABLED` is defined **and** `_CBR2_PRODUCT_REQ_` is not.
 - `network_interface.h` \- a types-only header declaring the gateway configuration record; a caller includes it only when it needs that record.
 
 The seven declared functions are mandatory: a vendor implements every one of them in every build variant.
@@ -68,7 +68,7 @@ Third-party vendors must implement appropriate handling to ensure operational re
 
 The interface is not required to be thread-safe.
 
-**Caller obligation:** any module invoking the Bridge Util `HAL` `API` must ensure calls are made in a thread-safe manner. The obligation covers the fifteen caller-supplied globals, which are shared mutable state; the logging macro, for example, writes several of them on every logged message.
+**Caller obligation:** any module invoking the Bridge Util HAL `API` must ensure calls are made in a thread-safe manner. The obligation covers the fifteen caller-supplied globals, which are shared mutable state; the logging macro, for example, writes several of them on every logged message.
 
 **Vendor latitude:** vendors may create internal threads and event mechanisms for operational needs, but must ensure synchronisation before closure cleanup.
 
@@ -95,7 +95,7 @@ The caller owns the memory it passes to the interface; the implementation owns t
 
 ### Power Management Requirements
 
-The `HAL` is not involved in any power management operation.
+The HAL is not involved in any power management operation.
 
 ### Asynchronous Notification Model
 
@@ -109,7 +109,7 @@ There are no asynchronous notifications. `HandlePreConfigVendor` and `HandlePost
 
 ### Internal Error Handling
 
-**Internal Error Reporting:** the `HAL` handles system errors, such as an out-of-memory condition, internally and logs the detail needed for investigation; see `Logging and debugging requirements`. The table below lists what each `API` returns and the caller action that follows.
+**Internal Error Reporting:** the HAL handles system errors, such as an out-of-memory condition, internally and logs the detail needed for investigation; see `Logging and debugging requirements`. The table below lists what each `API` returns and the caller action that follows.
 
 | API | Return value | Caller action |
 | --- | --- | --- |
@@ -121,11 +121,11 @@ There are no asynchronous notifications. `HandlePreConfigVendor` and `HandlePost
 
 ### Persistence Model
 
-There is no requirement for the `HAL` to persist any setting information.
+There is no requirement for the HAL to persist any setting information.
 
 ## Non functional requirements
 
-The following non functional requirements should be supported by the Bridge Util `HAL` component.
+The following non functional requirements should be supported by the Bridge Util HAL component.
 
 ### Logging and debugging requirements
 
@@ -133,21 +133,11 @@ The component is required to record all errors and critical informative messages
 
 Logs are written to the `bridgeUtils.log` file. The interface fixes its path as `BRIDGE_UTIL_LOG_FNAME`, `/rdklogs/logs/bridgeUtils.log`; the `/var/tmp/` directory is used instead only on a platform whose log partition is mounted elsewhere.
 
-The interface supplies the `bridge_util_log` macro, which writes each message to the caller-defined `logFp` stream as a `UTC`-timestamped line of the form `YYYY-MM-DD HH:MM:SS ::: <message>`; a message logged while `logFp` is `NULL` is discarded. The macro expands to a brace-enclosed block that can evaluate its arguments twice, so a caller passes it side-effect-free arguments and braces it when it is the body of an `if`, `else`, `for` or `while`.
+The interface supplies the `bridge_util_log` macro, which writes each message as a `UTC`-timestamped line to the caller-defined `logFp` stream; a message logged while `logFp` is `NULL` is discarded.
 
 Implementations must not log credentials, secrets, security-sensitive information, or other sensitive data.
 
-Logs must be categorised according to the following log levels, as defined by the Linux standard logging system, listed here in descending order of severity:
-
-- **FATAL:** Critical conditions, typically indicating system crashes or severe failures that require immediate attention.
-- **ERROR:** Non-fatal error conditions that nonetheless significantly impede normal operation.
-- **WARNING:** Potentially harmful situations that do not yet represent errors.
-- **NOTICE:** Important but not error-level events.
-- **INFO:** General informational messages that highlight system operations.
-- **DEBUG:** Detailed information typically useful only when diagnosing problems.
-- **TRACE:** Very fine-grained logging to trace the internal flow of the system.
-
-Each log entry should include a timestamp, the log level, and a message describing the event or condition.
+Log levels follow the Linux standard logging system, in descending order of severity: `FATAL`, `ERROR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG` and `TRACE`. Each log entry carries a timestamp, the log level and a message describing the event or condition.
 
 ### Memory and performance requirements
 
@@ -155,15 +145,13 @@ The component should not contribute disproportionately to memory or CPU utilisat
 
 ### Quality Control
 
-The Bridge Util `HAL` implementation should pass checks using third-party tools such as `Coverity`, `Black Duck` and `Valgrind` without any reported issues, to ensure quality.
+An implementation should pass analysis with third-party tools such as `Coverity`, `Black Duck` and `Valgrind` without reported issues. Neither the HAL implementation nor the vendor software beneath it may introduce memory leaks or memory corruption.
 
-There should be no memory leaks or memory corruption introduced by the `HAL` or by the underlying third-party software implementation.
-
-Any change to a file listed under `Source References` obliges a review of the topics in this document that rely on it. The responsible reviewer is the maintainer group the repository's contribution guide directs changes to: a change is raised as an issue, submitted as a pull request, and reviewed by the team before it is merged to the mainline.
+Any change to a file listed under `Source References` obliges a review of this document by the repository maintainers, through the issue and pull-request process `CONTRIBUTING.md` describes.
 
 ### Licensing
 
-The Bridge Util `HAL` implementation is expected to be released under the Apache License 2.0. Both interface headers carry an Apache 2.0 licence header, and the repository ships the corresponding `LICENSE`, `COPYING` and `NOTICE` files.
+The interface definition is licensed under the Apache License 2.0, with the full text in `LICENSE` and the attribution notice in `NOTICE`. An implementation of this interface is expected to be released under the Apache License 2.0.
 
 ### Build Requirements
 
@@ -173,9 +161,9 @@ This repository ships the interface headers, documentation and licence files. Th
 
 ### Variability Management
 
-Changes to the interface are controlled by versioning. Vendors are expected to implement a fixed version of the interface and, subject to their service agreements, to move to later versions as demand requires.
+Changes to the interface are controlled by versioning. Vendors implement a designated version of the interface and move to later versions as their service agreements require. Each interface version follows [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), and vendor code complies with a specific version.
 
-Each `API` interface is versioned using [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html), and the vendor code complies with a specific version of the interface. The interface is versioned by the repository's release tags; this document describes release `1.3.0`.
+The interface version is identified by the repository's release tag; this document describes release `1.3.0`.
 
 **Compile-time flags:** `WIFI_MANAGE_SUPPORTED`, `AMENITIES_NETWORK_ENABLED` and `_CBR2_PRODUCT_REQ_` select which optional `enum Config` members are declared, as listed under `Optional Components`. They remove enumerators, never functions. Code that names an enumerator its build does not declare does not compile, and that enumerator's value must not be passed as an instance number in such a build.
 
@@ -187,11 +175,11 @@ Each `API` interface is versioned using [Semantic Versioning 2.0.0](https://semv
 
 **Customizable by the platform or product:**
 
-- **The declared configuration set**, through the compile-time flags under `Variability Management`.
-- **The vendor interface names** `getVendorIfaces` returns; the values documented for the bridge record \- `eth0`, `moca0`, `wlan0`, `gre0` and the rest \- are examples rather than a fixed set.
-- **The device role and platform topology**, through the caller-supplied globals such as `DeviceMode`, `primaryBridgeName`, `ethWanEnabled`, `ethWanIfaceName`, `MocaIsolation_Val` and `PORT2ENABLE`.
+- **The declared configuration set:** through the compile-time flags under `Variability Management`.
+- **The vendor interface names:** those `getVendorIfaces` returns; the values documented for the bridge record \- `eth0`, `moca0`, `wlan0`, `gre0` and the rest \- are examples rather than a fixed set.
+- **The device role and platform topology:** through the caller-supplied globals such as `DeviceMode`, `primaryBridgeName`, `ethWanEnabled`, `ethWanIfaceName`, `MocaIsolation_Val` and `PORT2ENABLE`.
 - **The behaviour behind the hooks:** `HandlePreConfigVendor` and `HandlePostConfigVendor` apply `OEM` and `SoC` specific configuration without changing the caller.
-- **The log directory**, as recorded under `Logging and debugging requirements`.
+- **The log directory:** as recorded under `Logging and debugging requirements`.
 
 **Not customizable:**
 
@@ -202,9 +190,9 @@ Each `API` interface is versioned using [Semantic Versioning 2.0.0](https://semv
 
 ## Interface API Documentation
 
-All `HAL` function prototypes are declared in `bridge_util_hal.h`.
+All HAL function prototypes are declared in `bridge_util_hal.h`.
 
-1. Components and processes must include `bridge_util_hal.h` to make use of Bridge Util `HAL` capabilities.
+1. Components and processes must include `bridge_util_hal.h` to make use of Bridge Util HAL capabilities.
 2. Components and processes that need the gateway configuration record must additionally include `network_interface.h`, which `bridge_util_hal.h` does not include.
 
 ### Theory of operation and key concepts
@@ -244,7 +232,7 @@ Four parameters are declared as plain `int` while their valid ranges are enumera
 
 A caller of this interface constructs or interprets the types below. Each group names its header and what each member represents; the field-level and enumerator-level documentation lives on the declarations.
 
-**Macro constants** \- `bridge_util_hal.h`.
+**Macro constants:** `bridge_util_hal.h`.
 
 | Constant | Value | Represents |
 | --- | --- | --- |
@@ -259,7 +247,7 @@ A caller of this interface constructs or interprets the types below. Each group 
 | `INTERFACE_EXIST` | `0` | The named success value reported by `checkIfExists` when the interface is present. |
 | `INTERFACE_NOT_EXIST` | `-1` | The named value reported by `checkIfExists` when the interface is absent. |
 
-**Caller-supplied globals** \- `bridge_util_hal.h`. These fifteen symbols are declared `extern` by the interface and defined by the caller's program. They are shared mutable state; see `Threading Model` and `Process Model`.
+**Caller-supplied globals:** `bridge_util_hal.h`. These fifteen symbols are declared `extern` by the interface and defined by the caller's program. They are shared mutable state; see `Threading Model` and `Process Model`.
 
 | Symbol | Type | Represents |
 | --- | --- | --- |
@@ -335,9 +323,9 @@ A caller of this interface constructs or interprets the types below. Each group 
 | `GreIfList` | `char[IFLIST_SIZE]` | The `GRE` interface list, such as `gre0`, `gre1`. |
 | `WiFiIfList` | `char[IFLIST_SIZE]` | The Wi-Fi interface list, such as `wlan0`, `wlan1`. |
 
-**Logging macro** \- `bridge_util_hal.h`. `bridge_util_log` is a variadic macro taking a format string and its arguments. Its behaviour is described under `Logging and debugging requirements`.
+**Logging macro:** `bridge_util_hal.h`. `bridge_util_log` is a variadic macro taking a format string and its arguments. Its behaviour is described under `Logging and debugging requirements`.
 
-**Size constants** \- `network_interface.h`.
+**Size constants:** `network_interface.h`.
 
 | Constant | Value | Represents |
 | --- | --- | --- |
@@ -384,20 +372,20 @@ A caller of this interface constructs or interprets the types below. Each group 
 
 All seven functions are declared in `bridge_util_hal.h` and are grouped below by role. Their Doxygen blocks carry the per-`API` detail: parameter ranges, ownership, pre-conditions and return values.
 
-**Vendor hooks \- 2 declared functions.** Implemented by the vendor and called by the caller either side of a bridge change, so that `OEM` and `SoC` specific configuration is applied around it.
+**Vendor hooks \- 2 declared functions:** Implemented by the vendor and called by the caller either side of a bridge change, so that `OEM` and `SoC` specific configuration is applied around it.
 
 | API | Purpose |
 | --- | --- |
 | `HandlePreConfigVendor` | Applies vendor-specific configuration before the caller calls `updateBridgeInfo`. |
 | `HandlePostConfigVendor` | Applies vendor-specific configuration after the caller calls `updateBridgeInfo`. |
 
-**Bridge mutation \- 1 declared function.**
+**Bridge mutation \- 1 declared function:**
 
 | API | Purpose |
 | --- | --- |
 | `updateBridgeInfo` | Creates, updates or deletes a bridge according to the operation and interface type supplied, and handles the sync-delete case. |
 
-**Interface queries \- 3 declared functions.**
+**Interface queries \- 3 declared functions:**
 
 | API | Purpose |
 | --- | --- |
@@ -405,7 +393,7 @@ All seven functions are declared in `bridge_util_hal.h` and are grouped below by
 | `checkIfExistsInBridge` | Reports the outcome of testing whether a named interface is attached to a named bridge. |
 | `getVendorIfaces` | Retrieves the vendor-specific interface names available for bridge management. |
 
-**Interface-list mutation \- 1 declared function.**
+**Interface-list mutation \- 1 declared function:**
 
 | API | Purpose |
 | --- | --- |
