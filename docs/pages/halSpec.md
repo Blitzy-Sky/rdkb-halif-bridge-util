@@ -183,7 +183,7 @@ Each `API` interface is versioned using [Semantic Versioning 2.0.0](https://semv
 
 **Compile-time flags:** `WIFI_MANAGE_SUPPORTED`, `AMENITIES_NETWORK_ENABLED` and `_CBR2_PRODUCT_REQ_` select which optional `enum Config` members are declared, as listed under `Optional Components`. They remove enumerators, never functions. Code that names an enumerator its build does not declare does not compile, and that enumerator's value must not be passed as an instance number in such a build.
 
-**`OVS` dependency:** the interface was historically coupled to Open vSwitch through an `OvsAgentApi.h` include in `bridge_util_hal.h`. Release `1.1.1` removed that include and release `1.2.0` carries the wider dependency-removal work; the current headers include no `OVS` header and name no `OVS` type, so compiling against them carries no `OVS` build-time dependency.
+**The `OVS` dependency:** the interface was historically coupled to Open vSwitch through an `OvsAgentApi.h` include in `bridge_util_hal.h`. Release `1.1.1` removed that include and release `1.2.0` carries the wider dependency-removal work; the current headers include no `OVS` header and name no `OVS` type, so compiling against them carries no `OVS` build-time dependency.
 
 **Migrating from a pre-`1.1.1` revision:** the `Opr` argument of `updateBridgeInfo` takes `enum BridgeOpr` \- `DELETE_BRIDGE` or `CREATE_BRIDGE`, cast to `int`. A caller that passed `enum OVS_CMD` values replaces each with the corresponding `BridgeOpr` member and must not assume the two enumerations agree on members or values.
 
