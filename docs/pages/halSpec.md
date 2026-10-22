@@ -109,7 +109,7 @@ There are no asynchronous notifications. `HandlePreConfigVendor` and `HandlePost
 
 ### Internal Error Handling
 
-**Internal Error Reporting:** the HAL handles system errors, such as an out-of-memory condition, internally and logs the detail needed for investigation; see `Logging and debugging requirements`. The table below lists what each `API` returns and the caller action that follows.
+The table below lists what each `API` returns and the caller action that follows.
 
 | API | Return value | Caller action |
 | --- | --- | --- |
