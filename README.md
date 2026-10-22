@@ -1,1 +1,1 @@
-docs/pages/BridgeUtilHalSpec.md
+docs/pages/halSpec.md
