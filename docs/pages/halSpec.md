@@ -440,7 +440,7 @@ sequenceDiagram
 
 ### State Diagram
 
-The interface defines the status values below but no transitions between them; a caller must not infer an ordering from the order in which they are declared.
+The interface defines the status values below but no transitions between them, so no state diagram is drawn; a caller must not infer an ordering from the order in which they are declared.
 
 | Value or enumeration | What it reports |
 | --- | --- |
